@@ -3,8 +3,8 @@ define git::config(
   $section  = regsubst($name, '^([^\.]+)\.([^\.]+)$','\1'),
   $key      = regsubst($name, '^([^\.]+)\.([^\.]+)$','\2'),
   $user     = inline_template('<%= ENV["USER"] %>'),
-  $home     = inline_template('<%= ENV["HOME"] %>'),
 ) {
+  $home = $user ? { 'root' => '/root', default => "/home/$user" }
   exec{"git config --global ${section}.${key} '${value}'":
     environment => "HOME=${home}",
     path        => ['/usr/bin', '/bin'],
